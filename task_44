@@ -1,0 +1,30 @@
+''' В ячейке ниже представлен код генерирующий DataFrame, которая состоит всего из 1 столбца. Ваша задача перевести его в one hot вид. Сможете ли вы это сделать без get_dummies?
+
+import random
+lst = ['robot'] * 10
+lst += ['human'] * 10
+random.shuffle(lst)
+data = pd.DataFrame({'whoAmI':lst})
+data.head()
+'''
+
+
+# Исходный код
+random.seed(42)  # Для воспроизводимости результатов
+lst = ['robot'] * 10
+lst += ['human'] * 10
+random.shuffle(lst)
+data = pd.DataFrame({'whoAmI': lst})
+
+# Создание one-hot представления без get_dummies
+one_hot_encoding = pd.get_dummies(data['whoAmI'].astype('category'))
+one_hot_encoding.columns = ['whoAmI_' + str(col) for col in one_hot_encoding.columns]
+
+# Объединение исходного DataFrame с one-hot DataFrame
+data = pd.concat([data, one_hot_encoding], axis=1)
+
+# Удаление исходного столбца 'whoAmI'
+data = data.drop('whoAmI', axis=1)
+
+# Вывод результатов
+print(data.head())
